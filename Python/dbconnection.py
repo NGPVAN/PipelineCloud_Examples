@@ -2,8 +2,7 @@
 
 ## AADTokenCredentials for multi-factor authentication
 from msrestazure.azure_active_directory import AADTokenCredentials
-import adal, uuid, time, datetime
-import pem
+import adal, uuid, time, datetime, pem, pyodbc, struct
 
 def authenticate_client_cert():
     """
@@ -12,7 +11,8 @@ def authenticate_client_cert():
     authority_host_uri = 'https://login.microsoftonline.com'
     tenant = '798d7834-694a-41b4-b6cb-e5448f079f6b'
     authority_uri = authority_host_uri + '/' + tenant
-    resource_uri = 'https://management.core.windows.net/'
+    #resource_uri = 'https://management.core.windows.net/'
+    resource_uri = 'https://database.windows.net/'
     application_id = '8cbd0efa-37d2-4e39-9fad-e8757079b23c'
     certs = pem.parse_file("PipelineCloudPythonExample_privatenopass.pem")
     client_cert = str(certs[0])
@@ -28,10 +28,23 @@ def authenticate_client_cert():
     
     #return credentials
 #print(dir(authenticate_client_cert().token.values))
-a = authenticate_client_cert()
+authDict = authenticate_client_cert()
 #print(a["accessToken"])
-print("Your Token Will Expire on: " + str(datetime.datetime.fromtimestamp(a["expiresOn"])))
-print("Your Token Expires in: " + str(a["expiresIn"]))
-print("Provider=MSOLEDBSQL;Data Source=esv30ddbms001.database.windows.net;Initial Catalog=TestDb01;Access Token=" + a["accessToken"] + ";Use Encryption for Data=true;")
+print("Your Token Will Expire on: " + str(datetime.datetime.fromtimestamp(authDict["expiresOn"])))
+print("Your Token Expires in: " + str(authDict["expiresIn"]))
+#print("Provider={ODBC Driver 17 for SQL Server};Data Source=esv30ddbms001.database.windows.net;Initial Catalog=TestDb01;Access Token=" + authDict["accessToken"] + ";Use Encryption for Data=true;")
+rawToken = authDict["accessToken"]
+token = bytearray(rawToken.encode());
+exptoken = b'';
+for i in token:
+    exptoken += bytes({i});
+    exptoken += bytes(1);
+
+tokenstruct = struct.pack('=i', len(exptoken)) + exptoken;
+connstr = 'Driver={ODBC Driver 17 for SQL Server};Server=esv30ddbms001.database.windows.net;Database=TestDb01;'
+conn = pyodbc.connect(connstr, attrs_before = { 1256:tokenstruct });
+cursor = conn.cursor()
+cursor.execute("SELECT @@version")
+print((cursor.fetchall()))
 
 
