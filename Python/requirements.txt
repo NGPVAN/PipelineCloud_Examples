@@ -1,3 +1,3 @@
-adal >= 0.5.0
-azure-mgmt-datalake-analytics == 0.2.0
-pem >= 21.1.0
+adal >= 0.5.0   (https://adal-python.readthedocs.io/en/latest/)
+azure-mgmt-datalake-analytics == 0.2.0 (https://pypi.org/project/azure-mgmt-datalake-analytics/)
+pem >= 21.1.0 (https://pem.readthedocs.io/en/stable/)
