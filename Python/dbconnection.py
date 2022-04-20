@@ -2,7 +2,7 @@
 
 ## AADTokenCredentials for multi-factor authentication
 from msrestazure.azure_active_directory import AADTokenCredentials
-import adal, uuid, time, datetime, pem, pyodbc, struct
+import os, adal, uuid, time, datetime, pem, pyodbc, struct
 
 def authenticate_client_cert():
     """
@@ -17,7 +17,7 @@ def authenticate_client_cert():
     certs = pem.parse_file("PipelineCloudPythonExample_privatenopass.pem")
     client_cert = str(certs[0])
     #print(str(certs[0]))
-    client_cert_thumbprint = 'E21FC4884D4893CD3DDB9838BBA8842E7A4B9957'
+    client_cert_thumbprint = 'D5C67AFFACF1B5BD2087500B777F97F05E7C6FA0'
 
     context = adal.AuthenticationContext(authority_uri, api_version=None)
 
@@ -30,9 +30,8 @@ def authenticate_client_cert():
 #print(dir(authenticate_client_cert().token.values))
 authDict = authenticate_client_cert()
 #print(a["accessToken"])
-print("Your Token Will Expire on: " + str(datetime.datetime.fromtimestamp(authDict["expiresOn"])))
+print("Your Token Will Expire on: " + authDict["expiresOn"])
 print("Your Token Expires in: " + str(authDict["expiresIn"]))
-#print("Provider={ODBC Driver 17 for SQL Server};Data Source=esv30ddbms001.database.windows.net;Initial Catalog=TestDb01;Access Token=" + authDict["accessToken"] + ";Use Encryption for Data=true;")
 rawToken = authDict["accessToken"]
 token = bytearray(rawToken.encode());
 exptoken = b'';
@@ -41,10 +40,10 @@ for i in token:
     exptoken += bytes(1);
 
 tokenstruct = struct.pack('=i', len(exptoken)) + exptoken;
-connstr = 'Driver={ODBC Driver 17 for SQL Server};Server=esv30ddbms001.database.windows.net;Database=TestDb01;'
+connstr = 'Driver={ODBC Driver 17 for SQL Server};Server=esv30ddbms001.database.windows.net;Database=PipelineCloudExampleDatabase;'
 conn = pyodbc.connect(connstr, attrs_before = { 1256:tokenstruct });
 cursor = conn.cursor()
 cursor.execute("SELECT @@version")
-print((cursor.fetchall()))
+print((cursor.fetchone())[0])
 
 

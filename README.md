@@ -16,8 +16,11 @@ The sample code provided in this package shows how to connect to an Azure SQL Da
 ### CONTENTS
 
 1. Python\dbconnection.py is sample Python code.
-1. Python\PipelineCloudPythonExample_privatenopass.pem is a private certificate.  This will be provided to you.
-1. Python\requirements.txt is a list of the required code libraries used in dbconnection.py.
+2. PipelineCloudPythonExample_full.pem is a constructed certificate in pem format created from the information sent by a single use secret when the account was setup.  The command to convert the certificate to the proper form for use with this example is:
+
+   ```openssl rsa -in PipelineCloudPythonExample_full.pem -out PipelineCloudPythonExample_privatenopass.pem```
+3. Python\PipelineCloudPythonExample_privatenopass.pem is a private certificate.
+4. Python\requirements.txt is a list of the required code libraries used in dbconnection.py.
 
 
 ### ABOUT 
@@ -33,8 +36,8 @@ The sample code includes a mix of variable and static parameters.
 #### Variable
   * ```application_id = '8cbd0efa-37d2-4e39-9fad-e8757079b23c'```  This will be provided to you.
   * ```certs = pem.parse_file("PipelineCloudPythonExample_privatenopass.pem")```  The private certificate will be provided to you; this must match the file name.
-  * ```client_cert_thumbprint = 'E21FC4884D4893CD3DDB9838BBA8842E7A4B9957'```  The private certificate will be provided to you; the thumbprint is inside of it.
-  * ```Database=TestDb01```   This will be provided to you.
+  * ```client_cert_thumbprint = 'D5C67AFFACF1B5BD2087500B777F97F05E7C6FA0'```  The private certificate will be provided to you; the thumbprint is inside of it.
+  * ```Database=PipelineCloudExampleDatabase```   This will be provided to you.
 
 
 
