@@ -2,7 +2,7 @@
 
 ## AADTokenCredentials for multi-factor authentication
 from msrestazure.azure_active_directory import AADTokenCredentials
-import adal, uuid, time, datetime, pem, pyodbc, struct
+import os, adal, uuid, time, datetime, pem, pyodbc, struct
 
 def authenticate_client_cert():
     """
