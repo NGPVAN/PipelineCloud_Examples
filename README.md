@@ -31,7 +31,7 @@ The sample code includes a mix of variable and static parameters.
 #### Static
   * ```authority_host_uri = 'https://login.microsoftonline.com'```
   * ```tenant = '798d7834-694a-41b4-b6cb-e5448f079f6b'```
-  * ```Server=esv30ddbms001.database.windows.net```
+  * ```Server=esv30ddbms001.database.windows.net``` or * ```Server=esv30pdbms002.database.windows.net``` Please refer to the setup information with the certificate information
   * ```resource_uri = 'https://database.windows.net/'```
 
 #### Variable
